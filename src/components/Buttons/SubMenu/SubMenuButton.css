@@ -1,0 +1,25 @@
+.sub-menu-button {
+    align-self: stretch;
+    align-items: center;
+    background-color: var(--nav-button-color);
+    border: 1px solid #242424;
+    color: #ffff;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    font-size: clamp(0.50rem, 0.75rem, 1.2rem);
+    height: 2rem;
+    justify-content: space-between;
+    margin: 0 15px;
+    padding: 0 15px;
+}
+
+.sub-menu-hover {
+    border: 1px solid #ffff;
+    font-weight: 700;
+}
+
+.sub-menu-button svg {
+    height: 26px;
+    width: 26px;
+}

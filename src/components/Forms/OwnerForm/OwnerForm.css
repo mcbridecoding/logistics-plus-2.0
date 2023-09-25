@@ -1,0 +1,9 @@
+.owner-frame {
+    align-items: flex-start;
+    display: flex;
+    border-bottom: 2px solid #cccc;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 0 0 15px 0;
+    width: 100%;
+}

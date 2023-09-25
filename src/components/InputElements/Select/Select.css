@@ -1,0 +1,20 @@
+select {
+    align-self: stretch;
+    background-color: #ffff;
+    border-color: #cccc;
+    border-radius: 3px;
+    font-size: 0.65rem;
+    opacity: .85;
+    padding-left: 5px;
+    height: 1.2rem;
+    width: 100%;
+    transition: 1s;
+}
+
+select:disabled {
+    background-color: #cccc;
+}
+
+option {
+    font-size: 0.65rem;
+}

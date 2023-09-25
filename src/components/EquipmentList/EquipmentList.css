@@ -1,0 +1,10 @@
+.equipment-list {
+    align-self: stretch;
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 100%;
+    justify-content: flex-start;
+    margin: 15px;
+}

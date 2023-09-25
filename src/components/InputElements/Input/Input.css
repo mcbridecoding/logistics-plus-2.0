@@ -1,0 +1,15 @@
+input {
+    background-color: #ffff;
+    border-color: #cccc;
+    border-radius: 3px;
+    font-size: 0.65rem;
+    opacity: .85;
+    height: 1.2rem;
+    padding-left: 5px;
+    transition: 1s;
+    width: 100%;
+}
+
+input:read-only {
+    background-color: #cccc;
+}

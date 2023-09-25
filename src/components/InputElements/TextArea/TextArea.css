@@ -1,0 +1,18 @@
+textarea {
+    align-self: stretch;
+    background-color: #ffff;
+    border-color: #cccc;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    flex: 1 1 auto;
+    opacity: .85;
+    padding-left: 5px;
+    min-height: 3rem;
+    max-height: 3rem;
+    width: 100%;
+    transition: 1s;
+}
+
+textarea:read-only {
+    background-color: #cccc;
+}

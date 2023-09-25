@@ -1,0 +1,21 @@
+.folder-panel {
+    align-self: stretch;
+    align-items: center;
+    background-color: var(--nav-panel-color);
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    justify-content: space-between;
+    min-width: 8rem;
+    max-width: 8rem;
+    max-height: 100%;
+    padding-bottom: 15px;
+    transition: 2s;
+}
+
+.folder-panel-small {
+    min-width: 2.5rem;
+    max-width: 2.5rem;
+}

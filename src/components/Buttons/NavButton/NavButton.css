@@ -1,0 +1,32 @@
+.nav-button {
+    align-self: stretch;
+    align-items: center;
+    background-color: var(--nav-button-color);
+    border: 1px solid #242424;
+    color: #ffff;
+    display: flex;
+    flex-direction: row;
+    font-size: clamp(0.50rem, 0.75rem, 1.2rem);
+    height: 2rem;
+    justify-content: space-between;
+    margin: 0 15px;
+    padding: 0 15px;
+}
+
+.nav-hover {
+    border: 2px solid #ffff;
+    font-weight: bold;
+}
+
+.nav-button:link {
+    text-decoration: none;
+}
+
+.nav-button:visited {
+    text-decoration: none;
+}
+
+.nav-button svg {
+    max-height: 22px;
+    max-width: 22px;
+}

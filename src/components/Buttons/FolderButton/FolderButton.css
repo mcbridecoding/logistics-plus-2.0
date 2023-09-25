@@ -1,0 +1,22 @@
+.folder-button {
+    animation: fadeIn 500ms;
+    background-color: transparent;
+    border-bottom: 1px solid #cccc;
+    color: #ffff;
+    cursor: pointer;
+    font-size: 0.65rem;
+    height: 3rem;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap; 
+    width: 100%;   
+}
+
+.folder-button-active {
+    color: var(--nav-button-color);
+}
+
+.folder-button-hidden {
+    display: none;
+}

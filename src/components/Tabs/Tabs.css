@@ -1,0 +1,27 @@
+.tab {
+    align-items: center;
+    background-color: var(--nav-button-color);
+    border: 1px solid #cccc;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    color: #ffff;
+    cursor: pointer;
+    display: flex;
+    font-size: .75rem;
+    flex: 1 1 auto;  
+    justify-content: center;  
+    height: 100%;
+    text-wrap: wrap;
+    max-width: 7rem;
+}
+
+.tab-hover {
+    border-color: var(--sub-button-color);   
+    color: var(--sub-button-color);
+    font-weight: bold;
+}
+
+.tab-active {
+    background-color: var(--sub-button-color);
+    color: var(--nav-button-color);
+}
