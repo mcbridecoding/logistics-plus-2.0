@@ -1,8 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const crypto = require('crypto');
-
+const crypto = require("crypto");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -74,7 +73,7 @@ const quoteSchema = new mongoose.Schema({
     glPickupState: String,
     glPickupCountry: String,
     glDeliveryCity: String,
-    glDeiveryState: String,
+    glDeliveryState: String,
     glDeliveryCountry: String,
 
     carrierDetails: Object,
@@ -109,6 +108,144 @@ async function findAddress(id) {
     };
 }
 
+async function splitQuoteData(dataArray) {
+    const ltl_dry = [];
+    const carrier_ltl_dry = [];
+    const tl_dry = [];
+    const carrier_tl_dry = [];
+
+    const ltl_fd = [];
+    const carrier_ltl_fd = [];
+    const tl_fd = [];
+    const carrier_tl_fd = [];
+
+    const ltl_rl = [];
+    const carrier_ltl_rl = [];
+    const tl_rl = [];
+    const carrier_tl_rl = [];
+
+    const LTL_DRY = [];
+    const TL_DRY = [];
+
+    const LTL_TC = [];
+    const carrier_ltl_tc = [];
+    const TL_TC = [];
+    const carrier_tl_tc = [];
+
+    const CARRIER_RATES_LTL_DRY = [];
+
+    const CARRIER_RATES_TL_DRY = [];
+
+    dataArray.forEach(data => {
+        if (data.shipmentSize === "LTL") {
+            if (data.temp === "Dry") {
+                CARRIER_RATES_LTL_DRY.push(...data.carrierRates);
+                LTL_DRY.push(data);
+            } else {
+                carrier_ltl_tc.push(...data.carrierRates)
+                LTL_TC.push(data);
+            }
+        } else {
+            if (data.temp === "Dry") {
+                CARRIER_RATES_TL_DRY.push(...data.carrierRates);
+                TL_DRY.push(data);
+            } else {
+                carrier_tl_tc.push(...data.carrierRates);
+                TL_TC.push(data);
+            }
+        }
+    });
+
+    LTL_DRY.forEach(data => {
+        if ((data.equipmentRequired.dv || data.equipmentRequired.rf || data.equipmentRequired.du) && (data.equipmentRequired.fd || data.equipmentRequired.sd || data.equipmentRequired.sb || data.equipmentRequired.dd || data.equipmentRequired.fu) && (data.equipmentRequired.rl)) {
+            ltl_dry.push(data);
+            ltl_fd.push(data);
+            ltl_rl.push(data);
+        } else if ((data.equipmentRequired.dv || data.equipmentRequired.rf || data.equipmentRequired.du) && (data.equipmentRequired.fd || data.equipmentRequired.sd || data.equipmentRequired.sb || data.equipmentRequired.dd || data.equipmentRequired.fu)) {
+            ltl_dry.push(data);
+            ltl_fd.push(data);
+        } else if (data.equipmentRequired.dv || data.equipmentRequired.rf || data.equipmentRequired.du) {
+            ltl_dry.push(data);
+        } else if (data.equipmentRequired.fd || data.equipmentRequired.sd || data.equipmentRequired.sb || data.equipmentRequired.dd || data.equipmentRequired.fu) {
+            ltl_fd.push(data);
+        } else {
+            ltl_rl.push(data);
+        }
+    });
+
+    TL_DRY.forEach(data => {
+        if ((data.equipmentRequired.dv || data.equipmentRequired.rf || data.equipmentRequired.du) && (data.equipmentRequired.fd || data.equipmentRequired.sd || data.equipmentRequired.sb || data.equipmentRequired.dd || data.equipmentRequired.fu) && (data.equipmentRequired.rl)) {
+            tl_dry.push(data);
+            tl_fd.push(data);
+            tl_rl.push(data);
+        } else if ((data.equipmentRequired.dv || data.equipmentRequired.rf || data.equipmentRequired.du) && (data.equipmentRequired.fd || data.equipmentRequired.sd || data.equipmentRequired.sb || data.equipmentRequired.dd || data.equipmentRequired.fu)) {
+            tl_dry.push(data);
+            tl_fd.push(data);
+        } else if (data.equipmentRequired.dv || data.equipmentRequired.rf || data.equipmentRequired.du) {
+            tl_dry.push(data);
+        } else if (data.equipmentRequired.fd || data.equipmentRequired.sd || data.equipmentRequired.sb || data.equipmentRequired.dd || data.equipmentRequired.fu) {
+            tl_fd.push(data);
+        } else {
+            tl_rl.push(data);
+        }
+    });
+
+    CARRIER_RATES_LTL_DRY.forEach(data => {
+        if (data.carrierEquipment === "DV" || data.carrierEquipment === "RF" || data.carrierEquipment === "DU") {
+            carrier_ltl_dry.push(data);
+        } else if (data.carrierEquipment === "FD" || data.carrierEquipment === "SD" || data.carrierEquipment === "SB" || data.carrierEquipment === "DD" || data.carrierEquipment === "FU") {
+            carrier_ltl_fd.push(data);
+        } else {
+            carrier_ltl_rl.push(data);
+        }
+    });
+
+    CARRIER_RATES_TL_DRY.forEach(data => {
+        if (data.carrierEquipment === "DV" || data.carrierEquipment === "RF" || data.carrierEquipment === "DU") {
+            carrier_tl_dry.push(data);
+        } else if (data.carrierEquipment === "FD" || data.carrierEquipment === "SD" || data.carrierEquipment === "SB" || data.carrierEquipment === "DD" || data.carrierEquipment === "FU") {
+            carrier_tl_fd.push(data);
+        } else {
+            carrier_tl_rl.push(data);
+        }
+    })
+
+    return {
+        ltl_dry: {
+            customer: ltl_dry,
+            carrier: carrier_ltl_dry,
+        },
+        tl_dry: {
+            customer: tl_dry,
+            carrier: carrier_tl_dry
+        },
+        ltl_tc: {
+            customer: LTL_TC,
+            carrier: carrier_ltl_tc
+        },
+        tl_tc: {
+            customer: TL_TC,
+            carrier: carrier_tl_tc
+        },
+        ltl_fd: {
+            customer: ltl_fd,
+            carrier: carrier_ltl_fd
+        },
+        tl_fd: {
+            customer: tl_fd,
+            carrier: carrier_tl_fd
+        },
+        ltl_rl: {
+            customer: ltl_rl,
+            carrier: carrier_ltl_rl
+        },
+        tl_rl: {
+            customer: tl_rl,
+            carrier: carrier_tl_rl
+        }
+    }
+}
+
 app.route("/api/defaults")
     .get(async (req, res) => {
         const defaults = await Default.findOne({});
@@ -140,7 +277,23 @@ app.route("/api/addressbook/add-contact")
 
         newContact.save();
         res.send("Success");
-    })  
+    });
+
+app.route("/api/goodlanes/customer-list")
+    .get(async (req, res) => {
+        const quotes = await Quote.find({}).sort({ "client.company": 1 });
+        const customerList = []
+        quotes.forEach(quote => {
+            if (!customerList.some(customer => customer.id === quote.client.id)) {
+                customerList.push({
+                    id: quote.client.id,
+                    company: quote.client.company
+                });
+            }
+        });
+
+        res.send(customerList);
+    });
 
 app.route("/api/quotes/new-quote")
     .post(async (req, res) => {
@@ -157,7 +310,7 @@ app.route("/api/quotes/new-quote")
         };
 
         const shipper = {};
-        if (data.shipper === "" || data.shipper === undefined) {
+        if (data.shipper === "" || data.shipper === undefined || data.shipper === null) {
             shipper.city = data.shipperCity;
             shipper.state = data.shipperState;
             shipper.country = data.shipperCountry;
@@ -173,7 +326,7 @@ app.route("/api/quotes/new-quote")
         }
 
         const consignee = {};
-        if (data.consignee === "" || data.consignee === undefined) {
+        if (data.consignee === "" || data.consignee === undefined || data.consignee === null) {
             consignee.city = data.consigneeCity;
             consignee.state = data.consigneeState;
             consignee.country = data.consigneeCountry;
@@ -311,7 +464,7 @@ app.route("/api/quotes/new-quote")
             glPickupState: data.glPickupState,
             glPickupCountry: data.glPickupCountry,
             glDeliveryCity: data.glDeliveryCity,
-            glDeiveryState: data.glDeiveryState,
+            glDeliveryState: data.glDeliveryState,
             glDeliveryCountry: data.glDeliveryCountry,
         });
         newQuote.save();
@@ -335,7 +488,7 @@ app.route("/api/quotes/update-quote/:id")
         };
 
         const shipper = {};
-        if (data.shipper === "" || data.shipper === undefined) {
+        if (data.shipper === "" || data.shipper === undefined || data.shipper === null) {
             shipper.city = data.shipperCity;
             shipper.state = data.shipperState;
             shipper.country = data.shipperCountry;
@@ -351,7 +504,7 @@ app.route("/api/quotes/update-quote/:id")
         }
 
         const consignee = {};
-        if (data.consignee === "" || data.consignee === undefined) {
+        if (data.consignee === "" || data.consignee === undefined || data.consignee === null) {
             consignee.city = data.consigneeCity;
             consignee.state = data.consigneeState;
             consignee.country = data.consigneeCountry;
@@ -489,7 +642,7 @@ app.route("/api/quotes/update-quote/:id")
             glPickupState: data.glPickupState,
             glPickupCountry: data.glPickupCountry,
             glDeliveryCity: data.glDeliveryCity,
-            glDeiveryState: data.glDeiveryState,
+            glDeliveryState: data.glDeliveryState,
             glDeliveryCountry: data.glDeliveryCountry,
         }, (err, docs) => {
             if (err) {
@@ -541,8 +694,8 @@ app.route("/api/quotes/add-carrier-rates/:id")
             notes: data.notes
         }
 
-        Quote.findOneAndUpdate({ _id: id}, {
-            $push : { carrierRates: rates }
+        Quote.findOneAndUpdate({ _id: id }, {
+            $push: { carrierRates: rates }
         }, (err, success) => {
             if (!err) {
                 console.log(`${success}`);
@@ -560,7 +713,7 @@ app.route("/api/quotes/delete-carrier-rates/quoteId=:quoteId/lineId=:lineId")
 
         Quote.findOneAndUpdate({ _id: quoteId }, {
             $pull: {
-                carrierRates : {
+                carrierRates: {
                     _id: lineId
                 }
             }
@@ -574,15 +727,44 @@ app.route("/api/quotes/delete-carrier-rates/quoteId=:quoteId/lineId=:lineId")
         });
     });
 
+app.route("/api/quotes/search-by-customer/:id")
+    .get(async (req, res) => {
+        const id = req.params.id;
+        const data = await Quote.find({ "client.id": id });
+        const splitData = await splitQuoteData(data)
+
+        res.send(splitData);
+    });
+
+app.route("/api/quotes/search-by-filter/:fCity,:fState/:tCity,:tState")
+    .get(async (req, res) => {
+        const params = {
+            glPickupCity: req.params.fCity,
+            glPickupState: req.params.fState,
+            glDeliveryCity: req.params.tCity,
+            glDeliveryState: req.params.tState
+        }
+        const data = await Quote.find({
+            glPickupCity: req.params.fCity,
+            glPickupState: req.params.fState,
+            glDeliveryCity: req.params.tCity,
+            glDeliveryState: req.params.tState 
+        });
+
+        res.send(data.length !== 0 ? await splitQuoteData(data) : []);
+    });
+
 app.route("/api/quotes/test")
     .get(async (req, res) => {
         const data = await Quote.find({}).sort({ date: 1 });
-        res.send(data);
-    })
+        const splitData = await splitQuoteData(data);
+
+        res.send(splitData);
+    });
 
 app.route("/api/test")
     .get(async (req, res) => {
-        res.render('/home');
-    })
+        res.render("/home");
+    });
 
 app.listen(PORT, () => { console.log(`Server running on ${PORT}`) });

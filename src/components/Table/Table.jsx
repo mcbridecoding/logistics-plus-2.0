@@ -46,7 +46,7 @@ function QuotesCustomerTable(props) {
             if (data[`l${i}`] === '') {
 
             } else {
-                shipmentDims.push(`${l}" x ${w}" x ${h}" @ ${c}`);
+                shipmentDims.push(`${l}" x ${w}" x ${h}" @ ${c} \n`);
             }
         }
 
@@ -70,7 +70,6 @@ function QuotesCustomerTable(props) {
                     <th className="col-sm">Quote #</th>
                     <th>Carrier</th>
                     <th>Notes</th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -90,6 +89,59 @@ function QuotesCustomerTable(props) {
                             <td className="col-sm">{data.isStackable ? "ST" : "NS"}</td>
                             <td className="col-sm">{data.shipmentDims.totalCUFT}</td>
                             <td className="col-sm">{data.totalWeight.weight}</td>
+                            <td className="col-md col-overflow">
+                                <a href={`/logistics/view-quote/${data._id}`}>
+                                    {data.quoteNumber || "N/A"}
+                                </a>
+                            </td>
+                            <td className="col-sm"></td>
+                            <td className="col-sm"></td>
+                        </tr>
+                    )
+                })}
+            </tbody>
+        </table>
+    )
+}
+
+function QuotesCarrierTable(props) {
+    return (
+        <table className="table">
+            <thead>
+                <tr className="col-align-center">
+                    <th className="col-index">#</th>
+                    <th className="col-sm">Date</th>
+                    <th>Company</th>
+                    <th className="col-sm">Quoted</th>
+                    <th className="col-sm">Equip.</th>
+                    <th className="col-sm">Skids</th>
+                    <th className="col-sm">Dims/Feet</th>
+                    <th className="col-sm">ST/RK</th>
+                    <th className="col-sm">CUFT</th>
+                    <th className="col-sm">Lbs.</th>
+                    <th className="col-sm">Quote #</th>
+                    <th>Via</th>
+                    <th>Notes</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {props.data.map((data, index) => {
+                    return (
+                        <tr
+                            key={data._id}
+                            className=""
+                        >
+                            <td className="col-index">{index + 1}</td>
+                            <td className="col-sm">{data.date}</td>
+                            <td className="col-lg col-overflow-none">{data.carrierName}</td>
+                            <td className="col-sm">{data.quoted}</td>
+                            <td className="col-sm col-overflow-none">{data.carrierEquipment}</td>
+                            <td className="col-sm"></td>
+                            <td className="col-md col-overflow-none"></td>
+                            <td className="col-sm"></td>
+                            <td className="col-sm"></td>
+                            <td className="col-sm"></td>
                             <td className="col-md col-overflow">
                                 <a href={`/logistics/view-quote/${data._id}`}>
                                     {data.quoteNumber || "N/A"}
@@ -166,4 +218,4 @@ function CarrierRateTable(props) {
 
 export default QuotesCustomerTable;
 
-export { CarrierRateTable }
+export { CarrierRateTable, QuotesCarrierTable }

@@ -23,6 +23,28 @@ function UtilityButton(props) {
     );
 }
 
+function UtilityButtonSmall(props) {
+    const [isHovered, setHover] = useState(false);
+
+    function handleMouseOver() {
+        setHover(!isHovered);
+    }
+
+    return (
+        <button
+            className={isHovered ? "utility-button-small utility-hover" : "utility-button-small"}
+            type={props.type}
+            onMouseOver={handleMouseOver}
+            onMouseOut={handleMouseOver}
+            onClick={props.onClick}
+            style={props.style}
+        >
+            {props.img}
+            {props.label}
+        </button>
+    );
+}
+
 function SubmitButton(props) {
     const [isHovered, setHover] = useState(false);
 
@@ -46,4 +68,4 @@ function SubmitButton(props) {
 
 export default UtilityButton;
 
-export { SubmitButton }
+export { SubmitButton, UtilityButtonSmall }

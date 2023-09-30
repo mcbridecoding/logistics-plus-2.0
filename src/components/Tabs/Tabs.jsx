@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./Tabs.css";
 
 function Tabs(props) {
-    const { onClick, ...tabProps } = props;
+    const { onClick } = props;
     const [isHovered, setHover] = useState(false);
 
     function handleMouseOver() {
@@ -12,11 +12,11 @@ function Tabs(props) {
     return (
         <button
             type="button"
-            className={isHovered ? "tab tab-hover" : "tab"}
+            className={isHovered ? `${props.class} tab tab-hover` : `tab ${props.class}`}
             onClick={onClick}
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOver}
-            {...tabProps}
+            disabled={props.disabled}
         >
             {props.label}
         </button>

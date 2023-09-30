@@ -49,6 +49,7 @@
     min-height: 4rem;
     justify-content: flex-end;
     padding-right: 2rem;
+    overflow: hidden;
 }
 
 .heading h1 {
